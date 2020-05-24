@@ -1,7 +1,5 @@
-Repositorio para la documentación de proyectos de
-6609/8607 Laboratorio de Microcontroladores
+6609 Laboratorio de Microcontroladores
 
-¡Completar!
+TP1 - Led parpadeante
 
-Integrantes (quiénes integran el grupo de trabajo)
-Proyecto (nombre) y breve descripción (3 párrafos)
+Toscano Mauro, 96890
