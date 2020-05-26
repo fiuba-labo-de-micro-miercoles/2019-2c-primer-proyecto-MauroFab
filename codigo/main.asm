@@ -1,3 +1,5 @@
+;Version PORTB0 salida
+
 .include "m2560def.inc"
 
 .cseg 
@@ -55,7 +57,7 @@ ciclo2:		inc		r20
 			brlo	ciclo2
 			ldi		r21,0x00
 			inc		r22
-			;Al poner el ultimo cpi en Oxff, cuenta m·s hasta prender la luz
+			;Al poner el ultimo cpi en Oxff, cuenta m√°s hasta prender la luz
 			;Entonces, la luz pasa mas tiempo apagada
 			cpi		r22,0xff
 			brlo	ciclo2
