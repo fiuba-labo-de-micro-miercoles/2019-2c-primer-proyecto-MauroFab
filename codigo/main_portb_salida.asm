@@ -12,7 +12,7 @@ main:
 ; Configuro puerto B
 ; PORTB como salida
 			ldi		r20,0xff	
-;Si quisiera uso PORTB0 como salida
+;Si quisiera usar PORTB0 como salida
 ;			ldi		r20,0x01	
 			out		DDRB,r20
 
