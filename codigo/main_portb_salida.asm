@@ -1,4 +1,4 @@
-MVersion PORTB como salida
+;Version PORTB como salida
 .include "m2560def.inc"
 
 .cseg 
