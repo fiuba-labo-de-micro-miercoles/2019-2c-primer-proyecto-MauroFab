@@ -6,20 +6,18 @@
 			jmp		main
 
 .org INT_VECTORS_SIZE
+
 main:
-			
-; Led en PB5 
-; Configuro puerto B
+			 
 ; PORTB como salida
-			ldi		r20,0xff	
-;Si quisiera usar PORTB0 como salida
-;			ldi		r20,0x01	
-			out		DDRB,r20
+	ldi		r20,0xff	
+	out		DDRB,r20
 
 ; rutina de encendido y apagado
 		
-prendo:		sbi		PORTB,0 	; encendido del led
-	
+prendo:
+			ldi r16, 0xff
+			out PORTB,r16
 
 demora1:
 			ldi 	r20,0x00
@@ -40,8 +38,9 @@ ciclo1:		inc		r20
 			cpi		r22,0x20
 			brlo	ciclo1
 			
-			
-			cbi		PORTB,0		; apagado del led
+			;apagado del led
+			ldi r16, 0x00
+			out PORTB,r16		
 
 demora2:
 			ldi 	r20,0x00
