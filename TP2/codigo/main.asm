@@ -1,0 +1,42 @@
+;TP2.asm
+;Led en PB6 = Digital Pin 12
+.EQU CONF_PUERTO_SALIDA = DDRB
+.EQU PUERTO_SALIDA = PORTB
+.EQU BIT_LED = 6 
+;Boton B en PE5 = Digital pin 3
+.EQU CONF_PUERTO_ENTRADA = DDRE
+.EQU PUERTO_ENTRADA = PINE
+.EQU PULLUP_PUERTO_ENTRADA = PORTE
+.EQU BIT_BOTON = 5
+
+.include "m2560def.inc"
+
+.cseg 
+.org 0x0000
+	
+	JMP MAIN
+
+.ORG INT_VECTORS_SIZE 
+
+MAIN:
+	;Configuro el bit que necesito del puerto con el led como salida
+	LDI R22, (1<<BIT_LED)
+	OUT CONF_PUERTO_SALIDA, R22	
+	;Configuro el bit que necesito del puerto con el pulsador como entrada
+	LDI R22, (0<<BIT_BOTON)
+	OUT CONF_PUERTO_ENTRADA, R22
+	;Para poner la resistencia de PULL UP usar las proximas dos lineas
+	;LDI R22, (1<<BIT_BOTON)
+	;OUT PULLUP_PUERTO_ENTRADA, R22
+
+NO_APRETADO:
+	cbi	PUERTO_SALIDA,BIT_LED
+	NO_APRETADO_LOOP:
+		SBIC PUERTO_ENTRADA, BIT_BOTON
+		JMP APRETADO_LOOP
+APRETADO:
+	sbi	PUERTO_SALIDA,BIT_LED
+	APRETADO_LOOP: 
+		SBIS PUERTO_ENTRADA, BIT_BOTON
+		JMP NO_APRETADO_LOOP;
+
