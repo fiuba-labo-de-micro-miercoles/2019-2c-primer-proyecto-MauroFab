@@ -4,5 +4,6 @@ TP2 - Manejo de puertos
 
 Toscano Mauro, 96890
 
-Falta:
-  - Video
+Video en:
+
+https://drive.google.com/file/d/1QOGmPFd5h-zA70ibWhNYgktVSEDVLCRH/view?usp=sharing
