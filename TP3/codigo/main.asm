@@ -23,16 +23,16 @@ MAIN:
 
 prender_led_siguiente:
 	OUT PUERTO_SALIDA,R16
-	LSL R16
 	call demora
+	LSL R16
 	cpi R16, (1<<BIT_LED_FINAL)
 	BREQ prender_led_anterior
 	RJMP prender_led_siguiente
 
 prender_led_anterior:
 	OUT PUERTO_SALIDA,R16
-	LSR R16
 	call demora
+	LSR R16
 	cpi R16, (1<<BIT_LED_INICIAL)
 	BREQ prender_led_siguiente
 	RJMP prender_led_anterior
