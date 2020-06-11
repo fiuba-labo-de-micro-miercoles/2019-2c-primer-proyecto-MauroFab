@@ -1,4 +1,4 @@
-6609 Laboratorio de Microcontroladores
+6609 Laboratorio de Microcomputadoras
 
 TP3 - AUTO FANTASTICO / Rotación de LEDs
 
