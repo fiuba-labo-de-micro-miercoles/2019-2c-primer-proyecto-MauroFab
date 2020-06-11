@@ -1,9 +1,16 @@
 .include "m2560def.inc"
 .EQU CONF_PUERTO_SALIDA = DDRC
 .EQU PUERTO_SALIDA = PORTC
-.EQU BIT_LED_INICIAL = 1
-.EQU BIT_LED_FINAL = 6
-.cseg 
+.EQU BIT_LED_INICIAL = 0
+.EQU BIT_LED_FINAL = 5
+.macro	setStack
+	ldi	r16,LOW(RAMEND)
+	out	SPL,r16
+	ldi	r16,HIGH(RAMEND)
+	out	SPH,r16
+.endmacro
+.cseg
+
 .org 0x0000
 			jmp		main
 
@@ -12,15 +19,23 @@
 MAIN:
 	LDI R22, 0xff
 	OUT CONF_PUERTO_SALIDA, R22	
-	
-prender_led_siguiente_primera_vez:
-
-	LDI R16, BIT_LED_INICIAL
+	LDI R16, (1 << BIT_LED_INICIAL)
 
 prender_led_siguiente:
-
 	OUT PUERTO_SALIDA,R16
 	LSL R16
+	call demora
+	cpi R16, (1<<BIT_LED_FINAL)
+	BREQ prender_led_anterior
+	RJMP prender_led_siguiente
+
+prender_led_anterior:
+	OUT PUERTO_SALIDA,R16
+	LSR R16
+	call demora
+	cpi R16, (1<<BIT_LED_INICIAL)
+	BREQ prender_led_siguiente
+	RJMP prender_led_anterior
 
 demora:
 		ldi 	r20,0x00
@@ -38,35 +53,4 @@ ciclo1:
 		inc		r22
 		cpi		r22,0x20
 		brlo	ciclo1
-
-		cpi R16, (1<<BIT_LED_FINAL)
-		BREQ prender_led_anterior_primera_vez
-		RJMP prender_led_siguiente
-
-prender_led_anterior_primera_vez:
-	LDI R16, (1 << BIT_LED_FINAL - 2)
-
-prender_led_anterior:
-		OUT PUERTO_SALIDA,R16
-		LSR R16
-
-demora2:
-		ldi 	r20,0x00
-		ldi 	r21,0x00
-		ldi		r22,0x00
-ciclo2:		
-		inc		r20
-		cpi		r20,0xff
-		brlo	ciclo2
-		ldi		r20,0x00
-		inc		r21
-		cpi		r21,0xff
-		brlo	ciclo2
-		ldi		r21,0x00
-		inc		r22
-		cpi		r22,0x20
-		brlo	ciclo2
-
-		cpi R16, (1<<BIT_LED_INICIAL - 1)
-		BREQ prender_led_siguiente_primera_vez
-		RJMP prender_led_anterior
+		ret
