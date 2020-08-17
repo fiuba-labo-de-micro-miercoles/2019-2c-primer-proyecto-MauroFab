@@ -109,12 +109,16 @@ delay_anti_rebote:
 	
 	//Pre escaler en 1024, lo que da unos 4.2s de delay aproximadamente
 	//Esto es para mostrarlo andando y testear
-	ldi r16, (1 << CS02 | 0 << CS01 | 1 << CS00)
+
+	//ldi r16, (1 << CS02 | 0 << CS01 | 1 << CS00)
+
 	//En una situación mas realista
 	//el pre escaler de 8 que da unos 32 ms de delay sería mas adecuado
 	//También se podria usar el timer de 256 bits y un pre escaler de 1024
-	//Para usar el pre escaler de 8, descomentar la siguiente linea
-	//ldi r16, (0 << CS02 | 1 << CS01 | 0 << CS00 )
+	//Para usar el pre escaler de 8
+
+	ldi r16, (0 << CS02 | 1 << CS01 | 0 << CS00 )
+
 	//Por si se uso antes, limpio el flag del overflow
 	sts TCCR3B,r16
 	sbi TIFR3, TOV0
