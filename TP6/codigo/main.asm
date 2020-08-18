@@ -32,7 +32,7 @@ MAIN:
 
 	LDI r16, (1 << BIT_LED_0 | 1 << BIT_LED_1 )
 	OUT CONF_PUERTO_SALIDA, r16	
-	// Mantengo apagado el tuner
+	// Mantengo apagado el timer
 	LDI r16, (0 << CS02 | 0 << CS01 | 0 << CS00); 
 	sts TCCR1B,r16
 	//Habilito el interrupt del timer overflow
@@ -105,16 +105,16 @@ pre_escaler_1024:
 delay_anti_rebote:
 	//Configuro T3 con un pre escaler para usar de espera y evitar captar rebotes
 	//T3 es un timer de 16 bits
-	//Voy a usarlo manualmente, sin interrupciones, asi que no configuro nada más
+	//Voy a usarlo manualmente, sin interrupciones, asi que no configuro nada mÃ¡s
 	
 	//Pre escaler en 1024, lo que da unos 4.2s de delay aproximadamente
 	//Esto es para mostrarlo andando y testear
 
 	//ldi r16, (1 << CS02 | 0 << CS01 | 1 << CS00)
 
-	//En una situación mas realista
-	//el pre escaler de 8 que da unos 32 ms de delay sería mas adecuado
-	//También se podria usar el timer de 256 bits y un pre escaler de 1024
+	//En una situaciÃ³n mas realista
+	//el pre escaler de 8 que da unos 32 ms de delay serÃ­a mas adecuado
+	//TambiÃ©n se podria usar el timer de 256 bits y un pre escaler de 1024
 	//Para usar el pre escaler de 8
 
 	ldi r16, (0 << CS02 | 1 << CS01 | 0 << CS00 )
@@ -122,7 +122,7 @@ delay_anti_rebote:
 	//Por si se uso antes, limpio el flag del overflow
 	sts TCCR3B,r16
 	sbi TIFR3, TOV0
-	//Pongo el contador en 0, si no los tiempos varían
+	//Pongo el contador en 0, si no los tiempos varÃ­an
 	ldi r16, 0
 	sts TCNT3l, r16
 	sts TCNT3h, r16
