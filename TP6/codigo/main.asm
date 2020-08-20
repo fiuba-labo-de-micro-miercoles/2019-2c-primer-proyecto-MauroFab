@@ -32,7 +32,7 @@ MAIN:
 
 	LDI r16, (1 << BIT_LED_0 | 1 << BIT_LED_1 )
 	OUT CONF_PUERTO_SALIDA, r16	
-	// Mantengo apagado el timer
+	// Mantengo apagado el tuner
 	LDI r16, (0 << CS02 | 0 << CS01 | 0 << CS00); 
 	sts TCCR1B,r16
 	//Habilito el interrupt del timer overflow
@@ -40,14 +40,26 @@ MAIN:
 	sts TIMSK1, r16
 
 	ldi r28, 1 // flag led prendido
+	ldi r29, 1 // flag mantener interrupciones prendidas
 	sbi PUERTO_SALIDA, BIT_LED_0
 
 	setStack
 
 	bset 7; habilito interrupciones en status register 
 loop:
+	cpi r29, 0
+	breq apagar_momentaneamente_interrupciones
 	jmp loop
 
+apagar_momentaneamente_interrupciones:
+	ldi	r16,0; Deshabilito las interrupciones del int 0 e int 1
+	out EIMSK, r16
+	call delay ; espero
+	ldi	r16,(1 << 0 | 1 << 1);Habilito las interrupciones del int 0 e int 1
+	ldi r29, 1;Pongo el flag para que no vuelva a apagar las interrupciones
+	out EIMSK, r16
+	jmp loop
+	
 timer_int:
 	cpi r28, 1
 	breq apagar
@@ -61,7 +73,7 @@ apagar:
 
 isr_int1:
 isr_int0:
-	call delay_anti_rebote
+	ldi r29, 0;Flag para apagar interrupciones por un tiempo corto
 	in r20, PUERTO_ENTRADA
 	// Esta mascara no deberia ser necesaria porque no hay nada mas conectado
 	// la uso por claridad que me interesan esos bits
@@ -102,19 +114,19 @@ pre_escaler_1024:
 	sts TCCR1B,r16
 	rjmp fin_isr
 
-delay_anti_rebote:
+delay:
 	//Configuro T3 con un pre escaler para usar de espera y evitar captar rebotes
 	//T3 es un timer de 16 bits
-	//Voy a usarlo manualmente, sin interrupciones, asi que no configuro nada mÃ¡s
+	//Voy a usarlo manualmente, sin interrupciones, asi que no configuro nada más
 	
 	//Pre escaler en 1024, lo que da unos 4.2s de delay aproximadamente
 	//Esto es para mostrarlo andando y testear
 
 	//ldi r16, (1 << CS02 | 0 << CS01 | 1 << CS00)
 
-	//En una situaciÃ³n mas realista
-	//el pre escaler de 8 que da unos 32 ms de delay serÃ­a mas adecuado
-	//TambiÃ©n se podria usar el timer de 256 bits y un pre escaler de 1024
+	//En una situación mas realista
+	//el pre escaler de 8 que da unos 32 ms de delay sería mas adecuado
+	//También se podria usar el timer de 256 bits y un pre escaler de 1024
 	//Para usar el pre escaler de 8
 
 	ldi r16, (0 << CS02 | 1 << CS01 | 0 << CS00 )
@@ -122,7 +134,7 @@ delay_anti_rebote:
 	//Por si se uso antes, limpio el flag del overflow
 	sts TCCR3B,r16
 	sbi TIFR3, TOV0
-	//Pongo el contador en 0, si no los tiempos varÃ­an
+	//Pongo el contador en 0, si no los tiempos varían
 	ldi r16, 0
 	sts TCNT3l, r16
 	sts TCNT3h, r16
