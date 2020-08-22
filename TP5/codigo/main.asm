@@ -24,15 +24,11 @@ start:
 
 	ldi r22, 0xFE // A0 como input
 	out DDRF, r22
-	ldi r22, 0xAF // 10101111
+	ldi r22, (1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE | ADPS2 << 1 | ADPS1 << 1 | ADPS0 << 0)
 	sts ADCSRA, r22
 	ldi r22, 0x60 
 	sts ADMUX, r22
 	sei
-
-	lds R22, ADCSRA
-	ori R22, 0x40
-	sts ADCSRA, r22
 
 	ldi r20, 0
 loop:
@@ -44,6 +40,7 @@ adc_isr:
 	lsr r20
 	out PUERTO_SALIDA, r20
 	reti
+
 apagar:
 	ldi r20, 0x00
 	out PUERTO_SALIDA, r20
