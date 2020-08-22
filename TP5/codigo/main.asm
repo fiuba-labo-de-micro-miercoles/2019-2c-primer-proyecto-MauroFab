@@ -8,9 +8,13 @@
 .EQU LED_5 = 5 
 .EQU PUERTO_ENTRADA = PORTF
 .EQU CONF_PUERTO_ENTRADA = DDRF
+
+.ORG 0x0000
+	rjmp start
 .ORG 0x003A  // ADC conversion complete handler
 	rjmp adc_isr
-.ORG 0
+
+.ORG INT_VECTORS_SIZE
 
 start:
 	ldi r22, (1 << LED_0 | 1 << LED_1 | 1 << LED_2 | 1 << LED_3 | 1 << LED_4 | 1 << LED_5)
@@ -36,6 +40,8 @@ loop:
 
 adc_isr:
 	lds r20, ADCH
+	lsr r20
+	lsr r20
 	out PUERTO_SALIDA, r20
 	reti
 apagar:
