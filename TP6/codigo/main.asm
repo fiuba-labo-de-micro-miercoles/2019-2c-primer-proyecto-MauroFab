@@ -23,6 +23,7 @@
 	jmp isr_int1                 
 .org 0x0028 // Timer1 Overflow Handler
 	jmp timer_int
+.org INT_VECTORS_SIZE
 
 MAIN:
 	ldi	r16,(1 << 0 | 1 << 1); habilito interrupciones en pcint 0
